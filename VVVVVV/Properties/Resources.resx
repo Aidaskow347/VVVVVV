@@ -118,6 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="spike" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAcAAAAICAYAAAA1BOUGAAAABGdBTUEAALGPC/xhBQAAAD9JREFUGFdj
+        QAb/jY3/Q5mYAKfk/8jI/yBJrArAklAFUCEIgEtg040iCVWAIfELyIVJghWgSOQlg2kw29j4PwA5+VAA
+        nuQA7AAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="spike2" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAABGdBTUEAALGPC/xhBQAAAF9JREFUOE/V
+        jDkKwDAMBPMnvcZ1ev+fNBvLrIRJLPCRJgtT6Jg9okAECsfx/EBESqhQHC7YFx8FPMeZFl+CQTEs6ErK
+        smh8JnafClc5Kb6j6AXtc8u06EI+Kzb7fk8U3OrXQAyfJiRRAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="_0" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAoAAAAVCAYAAAB/sn/zAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
