@@ -107,5 +107,59 @@
   <ItemGroup>
     <None Include="Resources\download.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spike2Down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pixil-frame-0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\17.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pixil-frame-0 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spike2Left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spike2Right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spike2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\11 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\12 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dead frame.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\_0 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8 dead.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\10 dead.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
