@@ -44,6 +44,10 @@
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.startLabel = new System.Windows.Forms.Label();
+            this.nameInput = new System.Windows.Forms.TextBox();
+            this.timerOutput = new System.Windows.Forms.Label();
+            this.leaderBoardLabel = new System.Windows.Forms.Label();
+            this.winLabel = new System.Windows.Forms.Label();
             gameTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -190,12 +194,65 @@
             this.startLabel.Text = "Press Space to Start, or K for Controls";
             this.startLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // nameInput
+            // 
+            this.nameInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nameInput.Location = new System.Drawing.Point(447, 522);
+            this.nameInput.MaxLength = 3;
+            this.nameInput.Name = "nameInput";
+            this.nameInput.Size = new System.Drawing.Size(122, 62);
+            this.nameInput.TabIndex = 14;
+            this.nameInput.Visible = false;
+            // 
+            // timerOutput
+            // 
+            this.timerOutput.BackColor = System.Drawing.Color.Transparent;
+            this.timerOutput.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timerOutput.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.timerOutput.Location = new System.Drawing.Point(882, -1);
+            this.timerOutput.Name = "timerOutput";
+            this.timerOutput.Size = new System.Drawing.Size(135, 53);
+            this.timerOutput.TabIndex = 15;
+            this.timerOutput.Text = "0";
+            this.timerOutput.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.timerOutput.Visible = false;
+            // 
+            // leaderBoardLabel
+            // 
+            this.leaderBoardLabel.BackColor = System.Drawing.Color.Transparent;
+            this.leaderBoardLabel.Font = new System.Drawing.Font("Microsoft YaHei UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.leaderBoardLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.leaderBoardLabel.Location = new System.Drawing.Point(234, 9);
+            this.leaderBoardLabel.Name = "leaderBoardLabel";
+            this.leaderBoardLabel.Size = new System.Drawing.Size(554, 540);
+            this.leaderBoardLabel.TabIndex = 16;
+            this.leaderBoardLabel.Text = "LeaderBoard";
+            this.leaderBoardLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.leaderBoardLabel.Visible = false;
+            // 
+            // winLabel
+            // 
+            this.winLabel.BackColor = System.Drawing.Color.Transparent;
+            this.winLabel.Font = new System.Drawing.Font("Microsoft YaHei UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.winLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.winLabel.Location = new System.Drawing.Point(234, 378);
+            this.winLabel.Name = "winLabel";
+            this.winLabel.Size = new System.Drawing.Size(554, 134);
+            this.winLabel.TabIndex = 17;
+            this.winLabel.Text = "Congrats! You Made it To The End!";
+            this.winLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.winLabel.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1017, 641);
+            this.Controls.Add(this.winLabel);
+            this.Controls.Add(this.leaderBoardLabel);
+            this.Controls.Add(this.timerOutput);
+            this.Controls.Add(this.nameInput);
             this.Controls.Add(this.startLabel);
             this.Controls.Add(this.pictureBox7);
             this.Controls.Add(this.pictureBox5);
@@ -222,6 +279,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -240,6 +298,10 @@
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.Label startLabel;
+        private System.Windows.Forms.TextBox nameInput;
+        private System.Windows.Forms.Label timerOutput;
+        private System.Windows.Forms.Label leaderBoardLabel;
+        private System.Windows.Forms.Label winLabel;
     }
 }
 

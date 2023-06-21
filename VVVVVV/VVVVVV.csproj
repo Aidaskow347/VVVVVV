@@ -161,5 +161,8 @@
   <ItemGroup>
     <None Include="Resources\10 dead.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="leaderBoard.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

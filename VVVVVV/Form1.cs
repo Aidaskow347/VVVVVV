@@ -16,6 +16,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using VVVVVV.Properties;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Xml;
+
 
 // VVVVVV - This game is a platformer with the idea that you can flip gravity and move from platform to platform to reach an exit.
 
@@ -23,13 +27,19 @@ namespace VVVVVV
 {
     public partial class Form1 : Form
     {
+
         //region containing variables
 
         #region Variables
 
-        int playerXSpeed = 6, playerYSpeed = 10, playerXSave = 0, playerYSave = 0, playerYSave2 = 0, stage = 8,
+        int playerXSpeed = 6, playerYSpeed = 10, playerXSave = 0, playerYSave = 0, playerYSave2 = 0, stage = 14,
         playerCheckSaveX = 0, playerCheckSaveY = 0, levelState, randValue;
         int projectileX, projectileY, projectileWidth, projectileHeight, projectileXSpeed = 5, projectileYSpeed = 5, AnimationY = 0;
+
+        // need these for leaderboard
+
+        string timerValue, playerName;
+
         // flips player
         bool flipPlayer = false;
 
@@ -60,6 +70,8 @@ namespace VVVVVV
         SolidBrush brokenBrush = new SolidBrush(Color.DarkMagenta);
 
         Brush lineBrush = new SolidBrush(Color.White);
+
+        Brush lineBrush2 = new SolidBrush(Color.LightGoldenrodYellow);
 
         Brush spikeBrush = new SolidBrush(Color.Red);
 
@@ -287,6 +299,35 @@ namespace VVVVVV
         Rectangle side53 = new Rectangle(440, 320 + 50, 10, 500);
         Rectangle side54 = new Rectangle(300, 0, 10, 540);
         #endregion
+
+        #region case 14
+
+        Rectangle ground55 = new Rectangle(0, 0, 50, 640);
+        Rectangle ground56 = new Rectangle(1017 - 50, 0, 150, 540);
+        Rectangle ground57 = new Rectangle(0, 0, 1017 / 2 - 100, 20);
+        Rectangle ground58 = new Rectangle(1017 / 2 + 100, 0, 600, 20);
+        Rectangle ground59 = new Rectangle(150, 130, 50, 350);
+        Rectangle ground60 = new Rectangle(350, 0, 50, 180);
+        Rectangle ground61 = new Rectangle(350, 160, 450, 20);
+        Rectangle side55 = new Rectangle(1017 - 60, 0, 10, 540);
+        Rectangle side56 = new Rectangle(50, 0, 10, 640);
+        Rectangle side57 = new Rectangle(1017 / 2 - 110, 0, 10, 180);
+        Rectangle side58 = new Rectangle(1017 / 2 + 90, 0, 10, 20);
+        Rectangle side59 = new Rectangle(140, 130, 10, 350);
+        Rectangle side60 = new Rectangle(200, 130, 10, 350);
+        Rectangle side61 = new Rectangle(1017 / 2 - 165, 0, 10, 180);
+        Rectangle side62 = new Rectangle(350 + 450, 160, 10, 20);
+        Rectangle Checkpoint9 = new Rectangle(1017 - 100, 556, 28 * 2, 32 * 2);
+        Rectangle flipLine12 = new Rectangle(200, 450, 800, 5);
+        Rectangle breakable12 = new Rectangle(239, 300, 75, 20);
+        Rectangle breakable13 = new Rectangle(530, 220, 40, 20);
+        Rectangle breakable14 = new Rectangle(800, 220, 40, 20);
+        Rectangle Checkpoint10 = new Rectangle(248, 234, 28 * 2, 32 * 2);
+
+
+        #endregion
+
+
         List<Rectangle> groundList = new List<Rectangle>();
 
         List<Rectangle> breakList = new List<Rectangle>();
@@ -308,7 +349,12 @@ namespace VVVVVV
         List<Rectangle> projectile = new List<Rectangle>();
 
         Stopwatch walkWatch = new Stopwatch();
+
         Stopwatch blockBreak = new Stopwatch();
+
+        Stopwatch gameEnding = new Stopwatch();
+
+        Stopwatch gameWatch = new Stopwatch();
 
         Random ranGen = new Random();
 
@@ -379,9 +425,9 @@ namespace VVVVVV
 
         #region gameStates
 
-
         private void gameStart()
         {
+            active = left;
             xLabel.Visible = true;
             yLabel.Visible = true;
             stageOutput.Visible = true;
@@ -397,14 +443,58 @@ namespace VVVVVV
             startLabel.Visible = false;
 
 
-
+            gameWatch.Start();
             Level();
         }
         private void gameStop()
         {
+            active = deadframe;
+            gameWatch.Stop();
+           
 
+            
         }
         #endregion
+
+        // display for leaderboard // uploading to the text file
+
+        private void leaderBoard()
+        {
+            #region leaderboard display
+
+            // turn game values into leaderboard values
+
+            leaderBoardLabel.Visible = true;
+            timerValue = gameWatch.Elapsed.ToString(@"ss");
+            playerName = nameInput.Text;
+
+
+            List<string> tempList = new List<string>();
+
+
+            tempList.Add(nameInput.Text);
+            tempList.Add(Convert.ToString(gameWatch.Elapsed.ToString(@"ss")));
+
+
+            File.WriteAllLines("leaderBoard.txt", tempList);
+
+            List<string> scoreList = File.ReadAllLines("leaderBoard.txt").ToList();
+
+            for (int i = 0; i < scoreList.Count; i += 2)
+            {
+                leaderBoardLabel.Text = $"{scoreList[i]}\n  {scoreList[i + 1]}";
+                scoreList.RemoveAt(i);
+                scoreList.RemoveAt(i);
+            }
+            //var ordered = scoreList.Select(s => new { Str = s, Split = s.Split(':') })
+            // .OrderByDescending(x => int.Parse(x.Split[0]))
+            // .ThenBy(x => x.Split[1])
+            // .Select(x => x.Str)
+            // .ToList();
+
+
+            #endregion
+        }
 
         // key presses
 
@@ -641,6 +731,30 @@ namespace VVVVVV
                     case 8:
                         stage = 9;
                         player.X = 488;
+                        player.Y = 640;
+                        break;
+
+                    // if case = 14; you win, case 15, same thing, case 16 same thing, and then infinitly loop while win screen
+                    // plays
+
+                    case 14:
+                        gameStop();
+                        stage = 15;
+                        player.X = this.Width / 2;
+                        player.Y = 640;
+                        break;
+                    case 15:
+                        endAnimation();
+
+                        stage = 16;
+                        player.X = this.Width / 2;
+                        player.Y = 640;
+                        break;
+                    case 16:
+                        endAnimation();
+
+                        stage = 15;
+                        player.X = this.Width / 2;
                         player.Y = 640;
                         break;
                 }
@@ -958,6 +1072,7 @@ namespace VVVVVV
 
                     checkPointList.Add(Checkpoint4);
                     #endregion
+
                     break;
                 case 6:
                     #region case 6
@@ -1000,8 +1115,8 @@ namespace VVVVVV
 
                     checkPointList.Add(Checkpoint5);
                     #endregion
-                    break;
 
+                    break;
                 case 7:
                     #region case 7
                     clearLists();
@@ -1029,8 +1144,8 @@ namespace VVVVVV
 
 
                     #endregion
-                    break;
 
+                    break;
                 case 8:
                     #region case 8
                     clearLists();
@@ -1055,8 +1170,8 @@ namespace VVVVVV
                     #endregion
                     checkPointList.Add(Checkpoint7);
                     #endregion
-                    break;
 
+                    break;
                 case 9:
                     #region case 9
                     clearLists();
@@ -1083,8 +1198,8 @@ namespace VVVVVV
 
                     createSpikesDown(267, 170, 18);
                     #endregion
-                    break;
 
+                    break;
                 case 10:
                     #region case 10
                     clearLists();
@@ -1143,6 +1258,7 @@ namespace VVVVVV
                     createSpikes(100, 590, 35);
                     createSpikesDown(100, 20, 35);
                     #endregion
+
                     break;
                 case 12:
                     #region case 12
@@ -1150,8 +1266,9 @@ namespace VVVVVV
 
                     groundList.Add(ground51);
                     groundList.Add(ground52);
-                    
+
                     #endregion
+
                     break;
                 case 13:
                     #region case 13
@@ -1166,18 +1283,104 @@ namespace VVVVVV
                     sideList.Add(side54);
 
                     #endregion
+
                     break;
                 case 14:
                     #region case 14
                     clearLists();
 
+                    #region grounds
                     groundList.Add(ground);
+                    groundList.Add(ground55);
+                    groundList.Add(ground56);
+                    groundList.Add(ground57);
+                    groundList.Add(ground58);
+                    groundList.Add(ground59);
+                    groundList.Add(ground60);
+                    groundList.Add(ground61);
                     #endregion
-                     break;
+
+                    #region sides
+                    sideList.Add(side55);
+                    sideList.Add(side56);
+                    sideList.Add(side57);
+                    sideList.Add(side58);
+                    sideList.Add(side59);
+                    sideList.Add(side60);
+                    sideList.Add(side61);
+                    sideList.Add(side62);
+                    #endregion
+
+                    #region spikes
+                    createSpikesRight(120, 300, 2);
+
+                    createSpikesLeft(52, 150, 2);
+                    createSpikesLeft(52, 420, 2);
+
+                    createSpikes(660, 590, 3);
+                    createSpikes(460, 590, 3);
+                    createSpikes(260, 590, 3);
+
+                    createSpikesDown(347, 179, 17);
+                    createSpikesDown(823, 20, 5);
+                    #endregion
+
+                    flipperList.Add(flipLine12);
+
+
+                    breakList.Add(breakable12);
+                    breakWatch.Add(new Stopwatch());
+
+                    breakList.Add(breakable13);
+                    breakWatch.Add(new Stopwatch());
+
+                    breakList.Add(breakable14);
+                    breakWatch.Add(new Stopwatch());
+
+                    checkPointList.Add(Checkpoint9);
+                    checkPointList.Add(Checkpoint10);
+                    #endregion
+
+                    break;
+                case 15:
+                    clearLists();
+
+                    break;
+                case 16:
+                    clearLists();
+
+                    break;
             }
         }
 
-        // clears all rectangle lists
+        public void endAnimation()
+        {
+            if (pictureBox1.Visible == false)
+            {
+                pictureBox1.Visible = true;
+            }
+            else if (pictureBox2.Visible == false)
+            {
+                pictureBox2.Visible = true;
+            }
+            else if (pictureBox3.Visible == false)
+            {
+                pictureBox3.Visible = true;
+            }
+            else if (pictureBox4.Visible == false)
+            {
+                pictureBox4.Visible = true;
+            }
+            else if (pictureBox5.Visible == false)
+            {
+                pictureBox5.Visible = true;
+            }
+            else
+            {
+                pictureBox7.Visible = true;
+                winLabel.Visible = true;
+            }
+        }
 
         public void clearLists()
         {
@@ -1353,6 +1556,10 @@ namespace VVVVVV
             xLabel.Text = Convert.ToString(player.X);
             yLabel.Text = Convert.ToString(player.Y);
             stageOutput.Text = Convert.ToString(stage);
+
+            // this one stays
+            timerOutput.Visible = true;
+            timerOutput.Text = Convert.ToString(gameWatch.Elapsed.ToString(@"m\:ss"));
 
             // Walk Animation and Correction of Animation
 
@@ -1753,12 +1960,27 @@ namespace VVVVVV
 
             for (int i = 0; i < flipperList.Count; i++)
             {
-                e.Graphics.FillRectangle(lineBrush, flipperList[i].X, flipperList[i].Y, flipperList[i].Width, flipperList[i].Height);
+                if (player.IntersectsWith(flipperList[i]))
+                {
+                    e.Graphics.FillRectangle(lineBrush2, flipperList[i].X, flipperList[i].Y, flipperList[i].Width, flipperList[i].Height);
+                }
+                else
+                {
+                    e.Graphics.FillRectangle(lineBrush, flipperList[i].X, flipperList[i].Y, flipperList[i].Width, flipperList[i].Height);
+                }
             }
 
             for (int i = 0; i < flipperList2.Count; i++)
             {
-                e.Graphics.FillRectangle(lineBrush, flipperList2[i].X, flipperList2[i].Y, flipperList2[i].Width, flipperList2[i].Height);
+                if (player.IntersectsWith(flipperList[i]))
+                {
+                    e.Graphics.FillRectangle(lineBrush2, flipperList2[i].X, flipperList2[i].Y, flipperList2[i].Width, flipperList2[i].Height);
+                }
+                else
+                {
+
+                    e.Graphics.FillRectangle(lineBrush, flipperList2[i].X, flipperList2[i].Y, flipperList2[i].Width, flipperList2[i].Height);
+                }
             }
 
             //draw checkpoints
@@ -1852,7 +2074,7 @@ namespace VVVVVV
         {
 
             InitializeComponent();
-
+            nameInput.Enabled = false;
 
         }
     }
