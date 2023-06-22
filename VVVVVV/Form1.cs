@@ -51,8 +51,8 @@ namespace VVVVVV
         bool flip;
 
         //bools for activities
-        bool newState = true, checkPointSave, stageL, stageR, stageUp, stageDown;
-        bool collision = false, collision1 = false, wallTouchR, wallTouchL;
+        bool newState = true, checkPointSave, stageL, stageR, stageUp, stageDown, leaderBoardActive;
+        bool collision = false, collision1 = false, wallTouchR, wallTouchL, tutorialActive, gameActive = false;
         #endregion
 
         //region containing rectangles
@@ -327,6 +327,12 @@ namespace VVVVVV
 
         #endregion
 
+        #region case 99
+        Rectangle ground62 = new Rectangle(0, 0, 500, 1000);
+        Rectangle ground63 = new Rectangle(1017 - 50, 0, 500, 1000);
+        Rectangle side64 = new Rectangle(1017 - 60, 0, 10, 1000);
+        Rectangle side65 = new Rectangle(500, 0, 10, 1000);
+        #endregion
 
         List<Rectangle> groundList = new List<Rectangle>();
 
@@ -355,6 +361,8 @@ namespace VVVVVV
         Stopwatch gameEnding = new Stopwatch();
 
         Stopwatch gameWatch = new Stopwatch();
+
+        Stopwatch animationWatch = new Stopwatch();
 
         Random ranGen = new Random();
 
@@ -405,9 +413,6 @@ namespace VVVVVV
         // spike
 
         Image spike = Properties.Resources.spike2;
-
-
-
         Image spikeDown = Properties.Resources.spike2Down;
         Image spikeLeft = Properties.Resources.spike2Left;
         Image spikeRight = Properties.Resources.spike2Right;
@@ -425,14 +430,33 @@ namespace VVVVVV
 
         #region gameStates
 
+        // game menu
+        private void gameMenu()
+        {
+            leaderBoardInfoLabel.Visible = false;
+            leaderBoardLabel.Visible = false;
+            leaderBoardActive = false;
+            gameActive = false;
+            pictureBox1.Visible = true;
+            pictureBox2.Visible = true;
+            pictureBox3.Visible = true;
+            pictureBox4.Visible = true;
+            pictureBox5.Visible = true;
+            pictureBox7.Visible = true;
+            startLabel.Visible = true;
+        }
+
+        // what to do when starting the game
         private void gameStart()
         {
+            stage = 0;
             active = left;
             xLabel.Visible = true;
             yLabel.Visible = true;
             stageOutput.Visible = true;
             timer1.Enabled = true;
 
+            tutorialLabel.Visible = false;
             pictureBox1.Visible = false;
             pictureBox2.Visible = false;
             pictureBox3.Visible = false;
@@ -441,25 +465,90 @@ namespace VVVVVV
             pictureBox7.Visible = false;
 
             startLabel.Visible = false;
-
+            gameActive = true;
 
             gameWatch.Start();
             Level();
         }
+   
+        // what to do when stopping the game
         private void gameStop()
         {
-            active = deadframe;
             gameWatch.Stop();
-           
 
-            
+            nameInput.Enabled = true;
+            continueButton.Enabled = true;
+
         }
-        #endregion
+
+        // tutorial level
+
+        private void tutorial()
+        {
+            if (tutorialActive == true)
+            {
+                //create start screen again
+                clearLists();
+                timer1.Enabled = false;
+                tutorialLabel.Visible = false;
+                pictureBox1.Visible = true;
+                pictureBox2.Visible = true;
+                pictureBox3.Visible = true;
+                pictureBox4.Visible = true;
+                pictureBox5.Visible = true;
+                pictureBox7.Visible = true;
+                startLabel.Visible = true;
+                tutorialActive = false;
+            }
+            else
+            {
+                // hide start screen
+
+                pictureBox1.Visible = false;
+                pictureBox2.Visible = false;
+                pictureBox3.Visible = false;
+                pictureBox4.Visible = false;
+                pictureBox5.Visible = false;
+                pictureBox7.Visible = false;
+
+                startLabel.Visible = false;
+                // create tutorial level
+
+                tutorialLabel.Text = $"\nTutorial Level" +
+                    $"\n\n A and S to Move Left and Right\n\n W and S to Flip Direction" +
+                    $"\n\nK to Hide Tutorials\n\nSpace to Start the Game";
+                tutorialLabel.Visible = true;
+                stage = 99;
+                Level();
+                timer1.Enabled = true;
+
+                // bool to let the game know if the tutorial screen is currently active
+
+                tutorialActive = true;
+            }
+
+        }
 
         // display for leaderboard // uploading to the text file
 
         private void leaderBoard()
         {
+            leaderBoardActive = true; 
+            timer1.Enabled = false;
+            pictureBox1.Visible = false;
+            pictureBox2.Visible = false;
+            pictureBox3.Visible = false;
+            pictureBox4.Visible = false;
+            pictureBox5.Visible = false;
+            pictureBox7.Visible = false;
+            winLabel.Visible = false;
+            continueButton.Visible = false;
+            continueButton.Enabled = false;
+            nameInput.Visible = false;
+            nameInput.Enabled = false;
+            leaderBoardInfoLabel.Visible = true;
+            // leaderboard
+
             #region leaderboard display
 
             // turn game values into leaderboard values
@@ -473,7 +562,7 @@ namespace VVVVVV
 
 
             tempList.Add(nameInput.Text);
-            tempList.Add(Convert.ToString(gameWatch.Elapsed.ToString(@"ss")));
+            tempList.Add(timerValue);
 
 
             File.WriteAllLines("leaderBoard.txt", tempList);
@@ -482,7 +571,7 @@ namespace VVVVVV
 
             for (int i = 0; i < scoreList.Count; i += 2)
             {
-                leaderBoardLabel.Text = $"{scoreList[i]}\n  {scoreList[i + 1]}";
+                leaderBoardLabel.Text += $"\n\n{scoreList[i]}  ::  {scoreList[i + 1]}";
                 scoreList.RemoveAt(i);
                 scoreList.RemoveAt(i);
             }
@@ -495,6 +584,8 @@ namespace VVVVVV
 
             #endregion
         }
+
+        #endregion
 
         // key presses
 
@@ -515,9 +606,6 @@ namespace VVVVVV
                     break;
                 case Keys.S:
                     flipPlayer = false;
-                    break;
-                case Keys.K:
-
                     break;
 
             }
@@ -558,27 +646,31 @@ namespace VVVVVV
                     flipCheck();
                     break;
                 case Keys.Escape:
-                    Application.Exit();
-                    break;
-                case Keys.F:
-                    stage = stage + 1;
-                    Level();
-                    break;
-                case Keys.G:
-                    stage = stage - 1;
-                    Level();
-                    break;
-                case Keys.R:
-                    player.Y = 200;
-                    break;
-                case Keys.T:
-                    player.X = 500;
+                    // escape only if game is not on
+                    if (gameActive == false)
+                    {
+                        Application.Exit();
+                    }
+                    if (leaderBoardActive == false)
+                    {
+                        Application.Exit();
+                    }
                     break;
                 case Keys.Space:
-                    gameStart();
+                    if (gameActive == false)
+                    {
+                        gameStart();
+                    }
+                    if (leaderBoardActive == true)
+                    {
+                        gameMenu();
+                    }
                     break;
                 case Keys.K:
-
+                    if (gameActive == false)
+                    {
+                        tutorial();
+                    }
                     break;
             }
 
@@ -919,11 +1011,11 @@ namespace VVVVVV
 
                     #endregion
                     #region spikes
-                    createSpikes(700, 458 + 11, 4);
+                    createSpikes(700, 458 + 11, 3);
 
-                    createSpikes(400, 458 + 11, 4);
+                    createSpikes(400, 458 + 11, 3);
                     //down
-                    createSpikesDown(745, 100, 2);
+                    createSpikesDown(745, 100, 1);
 
                     createSpikesDown(400, 100, 2);
 
@@ -1350,6 +1442,20 @@ namespace VVVVVV
                     clearLists();
 
                     break;
+
+                case 99:
+                    clearLists();
+
+                    player.X = 800;
+                    player.Y = 500;
+                    groundList.Add(ground);
+                    groundList.Add(ground2);
+                    groundList.Add(ground62);
+                    groundList.Add(ground63);
+                    sideList.Add(side64);
+                    sideList.Add(side65);
+                    break;
+
             }
         }
 
@@ -1379,6 +1485,10 @@ namespace VVVVVV
             {
                 pictureBox7.Visible = true;
                 winLabel.Visible = true;
+                nameInput.Visible = true;
+                nameInput.Enabled = true;
+                continueButton.Visible = true;
+                continueButton.Enabled = true;
             }
         }
 
@@ -1507,6 +1617,12 @@ namespace VVVVVV
 
         }
 
+        // click button
+        private void continueButton_Click(object sender, EventArgs e)
+        {
+            leaderBoard();
+        }
+
         // methods to create lines of spikes
 
         #region createspikes
@@ -1551,6 +1667,7 @@ namespace VVVVVV
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+
             // output labels for game testing
 
             xLabel.Text = Convert.ToString(player.X);
@@ -2062,10 +2179,20 @@ namespace VVVVVV
             {
                 e.Graphics.FillRectangle(sideBrush, sideList[i].X, sideList[i].Y, sideList[i].Width, sideList[i].Height);
             }
-
+            #region drawing the Player
             // draw current player image
+            if (stage == 15 || stage == 16)
+            {
+                e.Graphics.DrawImage(deadframe, player.X, player.Y, 20, 42);
+            }
+            else
+            {
+                e.Graphics.DrawImage(active, player.X, player.Y, 20, 42);
+            }
 
-            e.Graphics.DrawImage(active, player.X, player.Y, 20, 42);
+            #endregion
+
+            // animation for the start of the game to make a cool transistion screen
 
             e.Graphics.FillRectangle(backGroundBrush, 0, 0 - AnimationY, this.Width, this.Height);
         }
@@ -2075,6 +2202,7 @@ namespace VVVVVV
 
             InitializeComponent();
             nameInput.Enabled = false;
+            continueButton.Enabled = false;
 
         }
     }
